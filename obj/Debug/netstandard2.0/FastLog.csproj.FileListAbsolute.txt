@@ -1,0 +1,10 @@
+E:\shd\github\SLog\CSharpLog\FastLog\bin\Debug\netstandard2.0\FastLog.deps.json
+E:\shd\github\SLog\CSharpLog\FastLog\bin\Debug\netstandard2.0\FastLog.dll
+E:\shd\github\SLog\CSharpLog\FastLog\bin\Debug\netstandard2.0\FastLog.pdb
+E:\shd\github\SLog\CSharpLog\FastLog\obj\Debug\netstandard2.0\FastLog.csproj.AssemblyReference.cache
+E:\shd\github\SLog\CSharpLog\FastLog\obj\Debug\netstandard2.0\FastLog.GeneratedMSBuildEditorConfig.editorconfig
+E:\shd\github\SLog\CSharpLog\FastLog\obj\Debug\netstandard2.0\FastLog.AssemblyInfoInputs.cache
+E:\shd\github\SLog\CSharpLog\FastLog\obj\Debug\netstandard2.0\FastLog.AssemblyInfo.cs
+E:\shd\github\SLog\CSharpLog\FastLog\obj\Debug\netstandard2.0\FastLog.csproj.CoreCompileInputs.cache
+E:\shd\github\SLog\CSharpLog\FastLog\obj\Debug\netstandard2.0\FastLog.dll
+E:\shd\github\SLog\CSharpLog\FastLog\obj\Debug\netstandard2.0\FastLog.pdb
