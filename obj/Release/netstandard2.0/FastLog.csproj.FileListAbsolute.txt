@@ -1,8 +1,0 @@
-E:\shd\github\SLog\CSharpLog\FastLog\bin\Release\netstandard2.0\FastLog.deps.json
-E:\shd\github\SLog\CSharpLog\FastLog\bin\Release\netstandard2.0\FastLog.dll
-E:\shd\github\SLog\CSharpLog\FastLog\bin\Release\netstandard2.0\FastLog.pdb
-E:\shd\github\SLog\CSharpLog\FastLog\obj\Release\netstandard2.0\FastLog.csproj.CoreCompileInputs.cache
-E:\shd\github\SLog\CSharpLog\FastLog\obj\Release\netstandard2.0\FastLog.AssemblyInfoInputs.cache
-E:\shd\github\SLog\CSharpLog\FastLog\obj\Release\netstandard2.0\FastLog.AssemblyInfo.cs
-E:\shd\github\SLog\CSharpLog\FastLog\obj\Release\netstandard2.0\FastLog.dll
-E:\shd\github\SLog\CSharpLog\FastLog\obj\Release\netstandard2.0\FastLog.pdb
