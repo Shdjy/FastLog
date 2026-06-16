@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Concurrent;
 using System.IO;
 using System.Runtime.CompilerServices;
@@ -187,29 +187,28 @@ namespace FastLog
         public static ILogSink CreateSink(LoggerOptions options)
         {
             string directory = options.ResolveSinkDirectory();
-            ILogSink warningFileSink = CreateWarningFileSink(directory, options.MaxFileSizeBytes);
+            ILogSink warningFileSink = CreateWarningFileSink(options, directory);
 
             switch (options.SinkType)
             {
                 case LogSinkType.File:
-                    return new FileLogSink(directory, options.MaxFileSizeBytes);
+                    return new FileLogSink(directory, options.MaxFileSizeBytes, options.Formatter, options.FileNamePrefix);
                 case LogSinkType.Console:
                     return new CompositeLogSink(
-                        new ConsoleLogSink(),
+                        new ConsoleLogSink(options.Formatter),
                         warningFileSink);
                 case LogSinkType.DebugView:
                     return new CompositeLogSink(
-                        new DebugViewLogSink(),
+                        new DebugViewLogSink(options.Formatter),
                         warningFileSink);
                 case LogSinkType.Udp:
                     return new CompositeLogSink(
                         warningFileSink,
-                        new UdpLogSink(options.UdpHost, options.UdpPort));
+                        new UdpLogSink(options.UdpHost, options.UdpPort, options.Formatter));
                 default:
                     throw new NotSupportedException("Unsupported log sink type: " + options.SinkType);
             }
         }
-
         private void ProcessQueue()
         {
             int writtenSinceFlush = 0;
@@ -410,9 +409,9 @@ namespace FastLog
             return DefaultFlushIntervalMilliseconds;
         }
 
-        private static ILogSink CreateWarningFileSink(string directory, long maxFileSizeBytes)
+        private static ILogSink CreateWarningFileSink(LoggerOptions options, string directory)
         {
-            return new LevelFilterLogSink(new FileLogSink(directory, maxFileSizeBytes), LogLevel.Warn);
+            return new LevelFilterLogSink(new FileLogSink(directory, options.MaxFileSizeBytes, options.Formatter, options.FileNamePrefix), LogLevel.Warn);
         }
 
         private static LoggerOptions CloneOptions(LoggerOptions options)
@@ -465,3 +464,6 @@ namespace FastLog
         }
     }
 }
+
+
+

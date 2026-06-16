@@ -507,7 +507,82 @@ MaxFileSizeBytes = 100 * 1024 * 1024
 
 `MaxFileSizeBytes = 0` 表示关闭大小滚动。
 
-## 13. 性能压测工具
+## 13. 自定义日志格式和多进程文件名
+
+FastLog 支持通过 `LoggerOptions.Formatter` 自定义内置 Sink 的输出格式。文件、控制台、DebugView、UDP 都会使用该格式器。
+
+默认完整格式为：
+
+```text
+yyyy-MM-dd HH:mm:ss.fff [LEVEL] [FileName.cs] [TID:x] MethodName() LineNumber : Message
+```
+
+示例：
+
+```text
+2026-06-16 20:45:04.021 [DEBUG] [DAEMON] [RuntimeCheck.cs] [TID:1] Main() 9 : 程序启动
+```
+
+如果一个系统由多个进程组成，可以使用 `FileNamePrefix` 让不同进程写入不同文件，避免 `MJInspector.exe`、`Server.exe`、`Daemon.exe` 同时写同一个日期日志文件。
+
+```csharp
+Log.Initialize(new LoggerOptions
+{
+    ProjectName = "MJInspector",
+    BasePath = AppDomain.CurrentDomain.BaseDirectory,
+    SinkDirectory = @"D:\Logs\Inspection",
+    FileNamePrefix = "MJInspector",
+    MinimumLevel = LogLevel.Debug,
+    SinkType = LogSinkType.File,
+    QueueFullMode = QueueFullMode.Block,
+    Formatter = message => string.Format(
+        System.Globalization.CultureInfo.InvariantCulture,
+        "{0:yyyy-MM-dd HH:mm:ss.fff} [{1}] [{2}] [{3}] [TID:{4}] {5}() {6} : {7}",
+        message.Timestamp.LocalDateTime,
+        message.Level.ToString().ToUpperInvariant(),
+        message.MemberName,
+        message.ThreadId,
+        message.FileName,
+        message.LineNumber,
+        message.Message)
+});
+```
+
+输出文件示例：
+
+```text
+D:\Logs\Inspection\MJInspector_2026-06-16.log
+D:\Logs\Inspection\Server_2026-06-16.log
+D:\Logs\Inspection\Daemon_2026-06-16.log
+```
+
+也可以通过 `LoggerConfiguration` 链式配置：
+
+```csharp
+Log.Initialize(config =>
+{
+    config
+        .ProjectName("Server")
+        .SinkDirectory(@"D:\Logs\Inspection")
+        .FileNamePrefix("Server")
+        .MinimumLevel(LogLevel.Debug)
+        .Formatter(message => string.Format(
+            System.Globalization.CultureInfo.InvariantCulture,
+            "{0:yyyy-MM-dd HH:mm:ss.fff} [{1}] [{2}] [{3}] [TID:{4}] {5}() {6} : {7}",
+            message.Timestamp.LocalDateTime,
+            message.Level.ToString().ToUpperInvariant(),
+            message.MemberName,
+            message.ThreadId,
+            message.FileName,
+            message.LineNumber,
+            message.Message))
+        .WriteToFile();
+});
+```
+
+`FileNamePrefix` 会自动替换文件名非法字符。`FileNamePrefix = "Server"` 时，当天第一份日志为 `Server_yyyy-MM-dd.log`，按大小滚动后为 `Server_yyyy-MM-dd_1.log`、`Server_yyyy-MM-dd_2.log`。
+
+## 14. 性能压测工具
 
 压测项目：
 
@@ -546,4 +621,8 @@ dotnet run --project .\CSharpLog\FastLog.Benchmark\FastLog.Benchmark.csproj -- -
 - `flushMs`：Flush 间隔毫秒
 - `maxFileBytes`：文件大小滚动阈值，`0` 表示关闭
 - `path`：日志输出目录
+
+
+
+
 

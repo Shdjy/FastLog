@@ -1,12 +1,21 @@
-using System;
+﻿using System;
+using FastLog.Formatting;
 using FastLog.Models;
 
 namespace FastLog.Sinks
 {
     public sealed class ConsoleLogSink : LogSinkBase
     {
+        private readonly LogFormatter _formatter;
+
         public ConsoleLogSink()
+            : this(null)
         {
+        }
+
+        public ConsoleLogSink(LogFormatter formatter)
+        {
+            _formatter = formatter;
             WindowsConsoleManager.Open();
         }
 
@@ -17,7 +26,7 @@ namespace FastLog.Sinks
                 return;
             }
 
-            WindowsConsoleManager.WriteLine(FormatShort(message), GetColor(message.Level));
+            WindowsConsoleManager.WriteLine(FormatShort(message, _formatter), GetColor(message.Level));
         }
 
         public override void Dispose()

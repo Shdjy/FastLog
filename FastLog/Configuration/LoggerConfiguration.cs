@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using FastLog.Models;
 using FastLog.Sinks;
@@ -161,6 +161,27 @@ namespace FastLog.Configuration
         }
 
         /// <summary>
+        /// Sets a custom formatter used by built-in sinks.
+        /// </summary>
+        /// <param name="formatter">Formatter delegate.</param>
+        /// <returns>The current configuration instance.</returns>
+        public LoggerConfiguration Formatter(Formatting.LogFormatter formatter)
+        {
+            Options.Formatter = formatter;
+            return this;
+        }
+
+        /// <summary>
+        /// Sets the file name prefix used by file sinks.
+        /// </summary>
+        /// <param name="fileNamePrefix">File name prefix.</param>
+        /// <returns>The current configuration instance.</returns>
+        public LoggerConfiguration FileNamePrefix(string fileNamePrefix)
+        {
+            Options.FileNamePrefix = fileNamePrefix;
+            return this;
+        }
+        /// <summary>
         /// Sets the callback used when a sink write or flush operation fails.
         /// </summary>
         /// <param name="errorHandler">Sink error callback.</param>
@@ -203,7 +224,7 @@ namespace FastLog.Configuration
         /// <returns>The current configuration instance.</returns>
         public LoggerConfiguration WriteToFile(string directory)
         {
-            return WriteTo(new FileLogSink(directory, Options.MaxFileSizeBytes));
+            return WriteTo(new FileLogSink(directory, Options.MaxFileSizeBytes, Options.Formatter, Options.FileNamePrefix));
         }
 
         /// <summary>
@@ -212,7 +233,7 @@ namespace FastLog.Configuration
         /// <returns>The current configuration instance.</returns>
         public LoggerConfiguration WriteToConsole()
         {
-            return WriteTo(new ConsoleLogSink());
+            return WriteTo(new ConsoleLogSink(Options.Formatter));
         }
 
         /// <summary>
@@ -221,7 +242,7 @@ namespace FastLog.Configuration
         /// <returns>The current configuration instance.</returns>
         public LoggerConfiguration WriteToDebugView()
         {
-            return WriteTo(new DebugViewLogSink());
+            return WriteTo(new DebugViewLogSink(Options.Formatter));
         }
 
         /// <summary>
@@ -234,7 +255,7 @@ namespace FastLog.Configuration
         {
             Options.UdpHost = host;
             Options.UdpPort = port;
-            return WriteTo(new UdpLogSink(host, port));
+            return WriteTo(new UdpLogSink(host, port, Options.Formatter));
         }
 
         /// <summary>
@@ -253,7 +274,7 @@ namespace FastLog.Configuration
         /// <returns>The current configuration instance.</returns>
         public LoggerConfiguration WriteWarningsToFile(string directory)
         {
-            return WriteTo(new LevelFilterLogSink(new FileLogSink(directory, Options.MaxFileSizeBytes), LogLevel.Warn));
+            return WriteTo(new LevelFilterLogSink(new FileLogSink(directory, Options.MaxFileSizeBytes, Options.Formatter, Options.FileNamePrefix), LogLevel.Warn));
         }
 
         /// <summary>
@@ -282,3 +303,4 @@ namespace FastLog.Configuration
         }
     }
 }
+

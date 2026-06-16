@@ -1,4 +1,5 @@
-using System.Globalization;
+﻿using System.Globalization;
+using FastLog.Formatting;
 using FastLog.Models;
 
 namespace FastLog.Sinks
@@ -17,6 +18,16 @@ namespace FastLog.Sinks
 
         protected static string FormatFull(LogMessage log)
         {
+            return FormatFull(log, null);
+        }
+
+        protected static string FormatFull(LogMessage log, LogFormatter formatter)
+        {
+            if (formatter != null)
+            {
+                return formatter(log);
+            }
+
             return string.Format(
                 CultureInfo.InvariantCulture,
                 "{0:yyyy-MM-dd HH:mm:ss.fff} [{1}] [{2}] [TID:{3}] {4}() {5} : {6}",
@@ -31,6 +42,16 @@ namespace FastLog.Sinks
 
         protected static string FormatShort(LogMessage log)
         {
+            return FormatShort(log, null);
+        }
+
+        protected static string FormatShort(LogMessage log, LogFormatter formatter)
+        {
+            if (formatter != null)
+            {
+                return formatter(log);
+            }
+
             return string.Format(
                 CultureInfo.InvariantCulture,
                 "{0:HH:mm:ss.fff} [{1}] [{2}] [TID:{3}] {4}() {5} : {6}",
@@ -43,7 +64,7 @@ namespace FastLog.Sinks
                 log.Message);
         }
 
-        protected static string ToLevelText(LogLevel level)
+        public static string ToLevelText(LogLevel level)
         {
             switch (level)
             {

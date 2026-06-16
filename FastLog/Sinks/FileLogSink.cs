@@ -1,7 +1,8 @@
-using System;
+﻿using System;
 using System.Globalization;
 using System.IO;
 using System.Text;
+using FastLog.Formatting;
 using FastLog.Models;
 
 namespace FastLog.Sinks
@@ -11,21 +12,30 @@ namespace FastLog.Sinks
         private readonly object _syncRoot;
         private readonly string _directory;
         private readonly long _maxFileSizeBytes;
+        private readonly LogFormatter _formatter;
+        private readonly string _fileNamePrefix;
         private StreamWriter _writer;
         private string _currentDate;
         private int _currentIndex;
         private string _currentPath;
 
         public FileLogSink(string directory)
-            : this(directory, 0)
+            : this(directory, 0, null, string.Empty)
         {
         }
 
         public FileLogSink(string directory, long maxFileSizeBytes)
+            : this(directory, maxFileSizeBytes, null, string.Empty)
+        {
+        }
+
+        public FileLogSink(string directory, long maxFileSizeBytes, LogFormatter formatter, string fileNamePrefix)
         {
             _syncRoot = new object();
             _directory = directory ?? throw new ArgumentNullException(nameof(directory));
             _maxFileSizeBytes = maxFileSizeBytes;
+            _formatter = formatter;
+            _fileNamePrefix = SanitizeFileNamePrefix(fileNamePrefix);
         }
 
         public override void Write(LogMessage message)
@@ -38,7 +48,7 @@ namespace FastLog.Sinks
             lock (_syncRoot)
             {
                 OpenLogFileIfNeeded(message.Timestamp);
-                _writer.WriteLine(FormatFull(message));
+                _writer.WriteLine(FormatFull(message, _formatter));
             }
         }
 
@@ -112,12 +122,28 @@ namespace FastLog.Sinks
 
         private string BuildLogFilePath(string date, int index)
         {
+            string prefix = string.IsNullOrEmpty(_fileNamePrefix) ? string.Empty : _fileNamePrefix + "_";
             if (index <= 0)
             {
-                return Path.Combine(_directory, date + ".log");
+                return Path.Combine(_directory, prefix + date + ".log");
             }
 
-            return Path.Combine(_directory, date + "_" + index.ToString(CultureInfo.InvariantCulture) + ".log");
+            return Path.Combine(_directory, prefix + date + "_" + index.ToString(CultureInfo.InvariantCulture) + ".log");
+        }
+
+        private static string SanitizeFileNamePrefix(string prefix)
+        {
+            if (string.IsNullOrWhiteSpace(prefix))
+            {
+                return string.Empty;
+            }
+
+            foreach (char invalidChar in Path.GetInvalidFileNameChars())
+            {
+                prefix = prefix.Replace(invalidChar, '_');
+            }
+
+            return prefix.Trim();
         }
 
         private void CloseCurrentWriter()

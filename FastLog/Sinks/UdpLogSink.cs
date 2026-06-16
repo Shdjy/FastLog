@@ -2,6 +2,7 @@
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
+using FastLog.Formatting;
 using FastLog.Models;
 
 namespace FastLog.Sinks
@@ -10,8 +11,14 @@ namespace FastLog.Sinks
     {
         private readonly UdpClient _client;
         private readonly IPEndPoint _remoteEndPoint;
+        private readonly LogFormatter _formatter;
 
         public UdpLogSink(string host, int port)
+            : this(host, port, null)
+        {
+        }
+
+        public UdpLogSink(string host, int port, LogFormatter formatter)
         {
             if (string.IsNullOrWhiteSpace(host))
             {
@@ -32,6 +39,7 @@ namespace FastLog.Sinks
 
             _remoteEndPoint = new IPEndPoint(addresses[0], port);
             _client = new UdpClient();
+            _formatter = formatter;
         }
 
         public override void Write(LogMessage message)
@@ -41,7 +49,7 @@ namespace FastLog.Sinks
                 return;
             }
 
-            byte[] data = Encoding.UTF8.GetBytes(FormatShort(message));
+            byte[] data = Encoding.UTF8.GetBytes(FormatShort(message, _formatter));
             _client.Send(data, data.Length, _remoteEndPoint);
         }
 
@@ -51,6 +59,3 @@ namespace FastLog.Sinks
         }
     }
 }
-
-
-

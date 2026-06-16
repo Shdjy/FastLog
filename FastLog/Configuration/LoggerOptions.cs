@@ -1,4 +1,5 @@
 ﻿using System;
+using FastLog.Formatting;
 using FastLog.Models;
 
 namespace FastLog.Configuration
@@ -23,6 +24,8 @@ namespace FastLog.Configuration
             MaxFileSizeBytes = 0;
             UdpHost = "127.0.0.1";
             UdpPort = 0;
+            FileNamePrefix = string.Empty;
+            Formatter = null;
         }
 
         public string ProjectName { get; set; }
@@ -55,6 +58,18 @@ namespace FastLog.Configuration
 
         public int UdpPort { get; set; }
 
+        /// <summary>
+        /// Gets or sets an optional file name prefix used by file sinks.
+        /// For example, "MJInspector" writes MJInspector_yyyy-MM-dd.log.
+        /// </summary>
+        public string FileNamePrefix { get; set; }
+
+        /// <summary>
+        /// Gets or sets a custom formatter used by built-in sinks.
+        /// When null, FastLog uses its default full or short formatter.
+        /// </summary>
+        public LogFormatter Formatter { get; set; }
+
         public string ResolveSinkDirectory()
         {
             if (!string.IsNullOrWhiteSpace(SinkDirectory))
@@ -66,6 +81,3 @@ namespace FastLog.Configuration
         }
     }
 }
-
-
-
