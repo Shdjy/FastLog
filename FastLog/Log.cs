@@ -39,6 +39,18 @@ namespace FastLog
             }
         }
 
+        public static void Initialize(Action<LoggerConfiguration> configure)
+        {
+            if (configure == null)
+            {
+                throw new ArgumentNullException(nameof(configure));
+            }
+
+            LoggerConfiguration configuration = new LoggerConfiguration();
+            configure(configuration);
+            SetLogger(configuration.CreateLogger());
+        }
+
         public static void SetLogger(ILogger logger)
         {
             if (logger == null)
