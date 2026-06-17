@@ -37,8 +37,12 @@ namespace FastLog.Sinks
                 {
                     EnsureWindowsConsole();
                     _outputHandle = OpenConsoleOutput();
-                    DisableCloseButton();
-                    SetConsoleCtrlHandler(CtrlHandler, true);
+
+                    if (_createdByFastLog)
+                    {
+                        DisableCloseButton();
+                        SetConsoleCtrlHandler(CtrlHandler, true);
+                    }
                 }
 
                 _initialized = true;
@@ -61,7 +65,11 @@ namespace FastLog.Sinks
 
                 if (IsWindows())
                 {
-                    SetConsoleCtrlHandler(CtrlHandler, false);
+                    if (_createdByFastLog)
+                    {
+                        SetConsoleCtrlHandler(CtrlHandler, false);
+                    }
+
                     CloseConsoleOutput();
 
                     if (_createdByFastLog)
@@ -123,12 +131,19 @@ namespace FastLog.Sinks
         {
             if (GetConsoleWindow() != IntPtr.Zero)
             {
+                _createdByFastLog = false;
                 return;
             }
 
-            if (!AttachConsole(AttachParentProcess))
+            if (AttachConsole(AttachParentProcess))
             {
-                _createdByFastLog = AllocConsole();
+                _createdByFastLog = false;
+                return;
+            }
+
+            if (AllocConsole())
+            {
+                _createdByFastLog = true;
             }
         }
 
