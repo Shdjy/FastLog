@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Concurrent;
+using System.Globalization;
 using System.IO;
 using System.Runtime.CompilerServices;
 using System.Threading;
@@ -89,6 +90,16 @@ namespace FastLog
             TryEnqueue(log);
         }
 
+        public void LogFormat(
+            LogLevel level,
+            string format,
+            object[] args,
+            [CallerMemberName] string memberName = "",
+            [CallerFilePath] string filePath = "",
+            [CallerLineNumber] int lineNumber = 0)
+        {
+            Log(level, FormatMessage(format, args), memberName, filePath, lineNumber);
+        }
         public void LogException(
             LogLevel level,
             Exception exception,
@@ -379,6 +390,28 @@ namespace FastLog
             }
         }
 
+        private static string FormatMessage(string format, object[] args)
+        {
+            if (format == null)
+            {
+                return string.Empty;
+            }
+
+            if (args == null || args.Length == 0)
+            {
+                return format;
+            }
+
+            try
+            {
+                return string.Format(CultureInfo.CurrentCulture, format, args);
+            }
+            catch (FormatException)
+            {
+                return format + " " + string.Join(" ", args);
+            }
+        }
+
         private static int GetQueueCapacity(LoggerOptions options)
         {
             if (options.QueueCapacity > 0)
@@ -464,6 +497,8 @@ namespace FastLog
         }
     }
 }
+
+
 
 
 

@@ -285,6 +285,28 @@ plcLog.Warn("PLC响应变慢");
 plcLog.Error("PLC连接失败");
 ```
 
+
+格式化写入也支持保留调用方信息。常用 1-4 个格式参数可以直接传入：
+
+```csharp
+Log.Info("PLC读取耗时 {0} ms", elapsedMs);
+Log.Info("条码 {0}", barcode);
+```
+
+如果需要传入动态参数数组，也可以使用数组重载：
+
+```csharp
+Log.Info("PLC读取耗时 {0} ms", new object[] { elapsedMs });
+```
+
+`MJLog` 兼容层同样提供常用 1-4 个参数的格式化重载，例如：
+
+```csharp
+logger.Info("PLC读取耗时 {0} ms", elapsedMs);
+logger.Info("条码 {0}", barcode);
+```
+
+输出中的文件名、方法名和行号仍指向业务代码调用位置。旧代码中的 `params object[]` 调用也保持兼容；当调用无法匹配到固定参数重载时，会走兼容入口。由于 C# 调用方信息参数本身也是 `string`，单个字符串格式参数建议写成 `logger.Info("条码 {0}", new object[] { barcode })` 或 `logger.Info("条码 {0}", (object)barcode)`，避免被编译器解析为手动传入 `memberName`。
 输出中的文件名、方法名、行号会指向：
 
 ```text
@@ -621,7 +643,6 @@ dotnet run --project .\CSharpLog\FastLog.Benchmark\FastLog.Benchmark.csproj -- -
 - `flushMs`：Flush 间隔毫秒
 - `maxFileBytes`：文件大小滚动阈值，`0` 表示关闭
 - `path`：日志输出目录
-
 
 
 

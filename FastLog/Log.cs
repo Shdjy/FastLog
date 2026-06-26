@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Runtime.CompilerServices;
 using FastLog.Configuration;
 using FastLog.Models;
@@ -100,26 +100,141 @@ namespace FastLog
             Current.Log(LogLevel.Trace, message, memberName, filePath, lineNumber);
         }
 
+        public static void Trace(string format, params object[] args)
+        {
+            Current.LogFormat(LogLevel.Trace, format, args, string.Empty, string.Empty, 0);
+        }
+        public static void Trace<T1>(string format, T1 arg1, [CallerMemberName] string memberName = "", [CallerFilePath] string filePath = "", [CallerLineNumber] int lineNumber = 0)
+        {
+            Current.LogFormat(LogLevel.Trace, format, new object[] { arg1 }, memberName, filePath, lineNumber);
+        }
+
+        public static void Trace<T1, T2>(string format, T1 arg1, T2 arg2, [CallerMemberName] string memberName = "", [CallerFilePath] string filePath = "", [CallerLineNumber] int lineNumber = 0)
+        {
+            Current.LogFormat(LogLevel.Trace, format, new object[] { arg1, arg2 }, memberName, filePath, lineNumber);
+        }
+
+        public static void Trace<T1, T2, T3>(string format, T1 arg1, T2 arg2, T3 arg3, [CallerMemberName] string memberName = "", [CallerFilePath] string filePath = "", [CallerLineNumber] int lineNumber = 0)
+        {
+            Current.LogFormat(LogLevel.Trace, format, new object[] { arg1, arg2, arg3 }, memberName, filePath, lineNumber);
+        }
+
+        public static void Trace<T1, T2, T3, T4>(string format, T1 arg1, T2 arg2, T3 arg3, T4 arg4, [CallerMemberName] string memberName = "", [CallerFilePath] string filePath = "", [CallerLineNumber] int lineNumber = 0)
+        {
+            Current.LogFormat(LogLevel.Trace, format, new object[] { arg1, arg2, arg3, arg4 }, memberName, filePath, lineNumber);
+        }
         public static void Debug(string message, [CallerMemberName] string memberName = "", [CallerFilePath] string filePath = "", [CallerLineNumber] int lineNumber = 0)
         {
             Current.Log(LogLevel.Debug, message, memberName, filePath, lineNumber);
         }
 
+        public static void Debug(string format, params object[] args)
+        {
+            Current.LogFormat(LogLevel.Debug, format, args, string.Empty, string.Empty, 0);
+        }
+        public static void Debug<T1>(string format, T1 arg1, [CallerMemberName] string memberName = "", [CallerFilePath] string filePath = "", [CallerLineNumber] int lineNumber = 0)
+        {
+            Current.LogFormat(LogLevel.Debug, format, new object[] { arg1 }, memberName, filePath, lineNumber);
+        }
+
+        public static void Debug<T1, T2>(string format, T1 arg1, T2 arg2, [CallerMemberName] string memberName = "", [CallerFilePath] string filePath = "", [CallerLineNumber] int lineNumber = 0)
+        {
+            Current.LogFormat(LogLevel.Debug, format, new object[] { arg1, arg2 }, memberName, filePath, lineNumber);
+        }
+
+        public static void Debug<T1, T2, T3>(string format, T1 arg1, T2 arg2, T3 arg3, [CallerMemberName] string memberName = "", [CallerFilePath] string filePath = "", [CallerLineNumber] int lineNumber = 0)
+        {
+            Current.LogFormat(LogLevel.Debug, format, new object[] { arg1, arg2, arg3 }, memberName, filePath, lineNumber);
+        }
+
+        public static void Debug<T1, T2, T3, T4>(string format, T1 arg1, T2 arg2, T3 arg3, T4 arg4, [CallerMemberName] string memberName = "", [CallerFilePath] string filePath = "", [CallerLineNumber] int lineNumber = 0)
+        {
+            Current.LogFormat(LogLevel.Debug, format, new object[] { arg1, arg2, arg3, arg4 }, memberName, filePath, lineNumber);
+        }
         public static void Info(string message, [CallerMemberName] string memberName = "", [CallerFilePath] string filePath = "", [CallerLineNumber] int lineNumber = 0)
         {
             Current.Log(LogLevel.Info, message, memberName, filePath, lineNumber);
         }
 
+        public static void Info(string format, params object[] args)
+        {
+            Current.LogFormat(LogLevel.Info, format, args, string.Empty, string.Empty, 0);
+        }
+        public static void Info<T1>(string format, T1 arg1, [CallerMemberName] string memberName = "", [CallerFilePath] string filePath = "", [CallerLineNumber] int lineNumber = 0)
+        {
+            Current.LogFormat(LogLevel.Info, format, new object[] { arg1 }, memberName, filePath, lineNumber);
+        }
+
+        public static void Info<T1, T2>(string format, T1 arg1, T2 arg2, [CallerMemberName] string memberName = "", [CallerFilePath] string filePath = "", [CallerLineNumber] int lineNumber = 0)
+        {
+            Current.LogFormat(LogLevel.Info, format, new object[] { arg1, arg2 }, memberName, filePath, lineNumber);
+        }
+
+        public static void Info<T1, T2, T3>(string format, T1 arg1, T2 arg2, T3 arg3, [CallerMemberName] string memberName = "", [CallerFilePath] string filePath = "", [CallerLineNumber] int lineNumber = 0)
+        {
+            Current.LogFormat(LogLevel.Info, format, new object[] { arg1, arg2, arg3 }, memberName, filePath, lineNumber);
+        }
+
+        public static void Info<T1, T2, T3, T4>(string format, T1 arg1, T2 arg2, T3 arg3, T4 arg4, [CallerMemberName] string memberName = "", [CallerFilePath] string filePath = "", [CallerLineNumber] int lineNumber = 0)
+        {
+            Current.LogFormat(LogLevel.Info, format, new object[] { arg1, arg2, arg3, arg4 }, memberName, filePath, lineNumber);
+        }
         public static void Warn(string message, [CallerMemberName] string memberName = "", [CallerFilePath] string filePath = "", [CallerLineNumber] int lineNumber = 0)
         {
             Current.Log(LogLevel.Warn, message, memberName, filePath, lineNumber);
         }
 
+        public static void Warn(string format, params object[] args)
+        {
+            Current.LogFormat(LogLevel.Warn, format, args, string.Empty, string.Empty, 0);
+        }
+        public static void Warn<T1>(string format, T1 arg1, [CallerMemberName] string memberName = "", [CallerFilePath] string filePath = "", [CallerLineNumber] int lineNumber = 0)
+        {
+            Current.LogFormat(LogLevel.Warn, format, new object[] { arg1 }, memberName, filePath, lineNumber);
+        }
+
+        public static void Warn<T1, T2>(string format, T1 arg1, T2 arg2, [CallerMemberName] string memberName = "", [CallerFilePath] string filePath = "", [CallerLineNumber] int lineNumber = 0)
+        {
+            Current.LogFormat(LogLevel.Warn, format, new object[] { arg1, arg2 }, memberName, filePath, lineNumber);
+        }
+
+        public static void Warn<T1, T2, T3>(string format, T1 arg1, T2 arg2, T3 arg3, [CallerMemberName] string memberName = "", [CallerFilePath] string filePath = "", [CallerLineNumber] int lineNumber = 0)
+        {
+            Current.LogFormat(LogLevel.Warn, format, new object[] { arg1, arg2, arg3 }, memberName, filePath, lineNumber);
+        }
+
+        public static void Warn<T1, T2, T3, T4>(string format, T1 arg1, T2 arg2, T3 arg3, T4 arg4, [CallerMemberName] string memberName = "", [CallerFilePath] string filePath = "", [CallerLineNumber] int lineNumber = 0)
+        {
+            Current.LogFormat(LogLevel.Warn, format, new object[] { arg1, arg2, arg3, arg4 }, memberName, filePath, lineNumber);
+        }
         public static void Error(string message, [CallerMemberName] string memberName = "", [CallerFilePath] string filePath = "", [CallerLineNumber] int lineNumber = 0)
         {
             Current.Log(LogLevel.Error, message, memberName, filePath, lineNumber);
         }
 
+        public static void Error(string format, params object[] args)
+        {
+            Current.LogFormat(LogLevel.Error, format, args, string.Empty, string.Empty, 0);
+        }
+        public static void Error<T1>(string format, T1 arg1, [CallerMemberName] string memberName = "", [CallerFilePath] string filePath = "", [CallerLineNumber] int lineNumber = 0)
+        {
+            Current.LogFormat(LogLevel.Error, format, new object[] { arg1 }, memberName, filePath, lineNumber);
+        }
+
+        public static void Error<T1, T2>(string format, T1 arg1, T2 arg2, [CallerMemberName] string memberName = "", [CallerFilePath] string filePath = "", [CallerLineNumber] int lineNumber = 0)
+        {
+            Current.LogFormat(LogLevel.Error, format, new object[] { arg1, arg2 }, memberName, filePath, lineNumber);
+        }
+
+        public static void Error<T1, T2, T3>(string format, T1 arg1, T2 arg2, T3 arg3, [CallerMemberName] string memberName = "", [CallerFilePath] string filePath = "", [CallerLineNumber] int lineNumber = 0)
+        {
+            Current.LogFormat(LogLevel.Error, format, new object[] { arg1, arg2, arg3 }, memberName, filePath, lineNumber);
+        }
+
+        public static void Error<T1, T2, T3, T4>(string format, T1 arg1, T2 arg2, T3 arg3, T4 arg4, [CallerMemberName] string memberName = "", [CallerFilePath] string filePath = "", [CallerLineNumber] int lineNumber = 0)
+        {
+            Current.LogFormat(LogLevel.Error, format, new object[] { arg1, arg2, arg3, arg4 }, memberName, filePath, lineNumber);
+        }
         public static void Error(Exception exception, string message = "", [CallerMemberName] string memberName = "", [CallerFilePath] string filePath = "", [CallerLineNumber] int lineNumber = 0)
         {
             Current.LogException(LogLevel.Error, exception, message, memberName, filePath, lineNumber);
@@ -130,6 +245,29 @@ namespace FastLog
             Current.Log(LogLevel.Fatal, message, memberName, filePath, lineNumber);
         }
 
+        public static void Fatal(string format, params object[] args)
+        {
+            Current.LogFormat(LogLevel.Fatal, format, args, string.Empty, string.Empty, 0);
+        }
+        public static void Fatal<T1>(string format, T1 arg1, [CallerMemberName] string memberName = "", [CallerFilePath] string filePath = "", [CallerLineNumber] int lineNumber = 0)
+        {
+            Current.LogFormat(LogLevel.Fatal, format, new object[] { arg1 }, memberName, filePath, lineNumber);
+        }
+
+        public static void Fatal<T1, T2>(string format, T1 arg1, T2 arg2, [CallerMemberName] string memberName = "", [CallerFilePath] string filePath = "", [CallerLineNumber] int lineNumber = 0)
+        {
+            Current.LogFormat(LogLevel.Fatal, format, new object[] { arg1, arg2 }, memberName, filePath, lineNumber);
+        }
+
+        public static void Fatal<T1, T2, T3>(string format, T1 arg1, T2 arg2, T3 arg3, [CallerMemberName] string memberName = "", [CallerFilePath] string filePath = "", [CallerLineNumber] int lineNumber = 0)
+        {
+            Current.LogFormat(LogLevel.Fatal, format, new object[] { arg1, arg2, arg3 }, memberName, filePath, lineNumber);
+        }
+
+        public static void Fatal<T1, T2, T3, T4>(string format, T1 arg1, T2 arg2, T3 arg3, T4 arg4, [CallerMemberName] string memberName = "", [CallerFilePath] string filePath = "", [CallerLineNumber] int lineNumber = 0)
+        {
+            Current.LogFormat(LogLevel.Fatal, format, new object[] { arg1, arg2, arg3, arg4 }, memberName, filePath, lineNumber);
+        }
         public static void Fatal(Exception exception, string message = "", [CallerMemberName] string memberName = "", [CallerFilePath] string filePath = "", [CallerLineNumber] int lineNumber = 0)
         {
             Current.LogException(LogLevel.Fatal, exception, message, memberName, filePath, lineNumber);
@@ -164,3 +302,6 @@ namespace FastLog
         }
     }
 }
+
+
+

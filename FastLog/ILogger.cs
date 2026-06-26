@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using FastLog.Models;
 using FastLog.Sinks;
 
@@ -23,6 +23,17 @@ namespace FastLog
         /// <param name="filePath">Caller source file path supplied by the compiler.</param>
         /// <param name="lineNumber">Caller source line number supplied by the compiler.</param>
         void Log(LogLevel level, string message, string memberName, string filePath, int lineNumber);
+
+        /// <summary>
+        /// Writes one formatted log message with caller metadata.
+        /// </summary>
+        /// <param name="level">Severity of the log message.</param>
+        /// <param name="format">Composite format string.</param>
+        /// <param name="args">Format arguments.</param>
+        /// <param name="memberName">Caller member name supplied by the compiler.</param>
+        /// <param name="filePath">Caller source file path supplied by the compiler.</param>
+        /// <param name="lineNumber">Caller source line number supplied by the compiler.</param>
+        void LogFormat(LogLevel level, string format, object[] args, string memberName, string filePath, int lineNumber);
 
         /// <summary>
         /// Writes exception details with caller metadata.
@@ -62,3 +73,4 @@ namespace FastLog
         void Flush();
     }
 }
+
