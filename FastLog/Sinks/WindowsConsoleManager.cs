@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Runtime.InteropServices;
 
 namespace FastLog.Sinks
@@ -6,6 +6,7 @@ namespace FastLog.Sinks
     internal static class WindowsConsoleManager
     {
         private const int AttachParentProcess = -1;
+        private const int StandardOutputHandle = -11;
         private const int GenericWrite = 0x40000000;
         private const int FileShareWrite = 0x00000002;
         private const int Existing = 3;
@@ -18,7 +19,7 @@ namespace FastLog.Sinks
         private static readonly IntPtr InvalidHandleValue = new IntPtr(-1);
         private static readonly ConsoleCtrlDelegate CtrlHandler = HandleConsoleControl;
         private static bool _initialized;
-        private static bool _createdByFastLog;
+        private static WindowsConsoleOwnership _consoleOwnership;
         private static int _referenceCount;
         private static IntPtr _outputHandle;
 
@@ -38,7 +39,7 @@ namespace FastLog.Sinks
                     EnsureWindowsConsole();
                     _outputHandle = OpenConsoleOutput();
 
-                    if (_createdByFastLog)
+                    if (_consoleOwnership == WindowsConsoleOwnership.CreatedByFastLog)
                     {
                         DisableCloseButton();
                         SetConsoleCtrlHandler(CtrlHandler, true);
@@ -65,20 +66,20 @@ namespace FastLog.Sinks
 
                 if (IsWindows())
                 {
-                    if (_createdByFastLog)
+                    if (_consoleOwnership == WindowsConsoleOwnership.CreatedByFastLog)
                     {
                         SetConsoleCtrlHandler(CtrlHandler, false);
                     }
 
                     CloseConsoleOutput();
 
-                    if (_createdByFastLog)
+                    if (_consoleOwnership == WindowsConsoleOwnership.CreatedByFastLog)
                     {
                         FreeConsole();
                     }
                 }
 
-                _createdByFastLog = false;
+                _consoleOwnership = WindowsConsoleOwnership.None;
                 _initialized = false;
             }
         }
@@ -131,29 +132,33 @@ namespace FastLog.Sinks
         {
             if (GetConsoleWindow() != IntPtr.Zero)
             {
-                _createdByFastLog = false;
+                _consoleOwnership = WindowsConsoleOwnership.ExistingProcessConsole;
+                return;
+            }
+
+            if (HasConsoleOutputHandle())
+            {
+                _consoleOwnership = WindowsConsoleOwnership.ExistingProcessConsole;
                 return;
             }
 
             if (AttachConsole(AttachParentProcess))
             {
-                _createdByFastLog = false;
+                _consoleOwnership = WindowsConsoleOwnership.AttachedParentConsole;
                 return;
             }
 
             if (AllocConsole())
             {
-                _createdByFastLog = true;
+                _consoleOwnership = WindowsConsoleOwnership.CreatedByFastLog;
+                return;
             }
+
+            _consoleOwnership = WindowsConsoleOwnership.None;
         }
 
         private static IntPtr OpenConsoleOutput()
         {
-            if (GetConsoleWindow() == IntPtr.Zero)
-            {
-                return IntPtr.Zero;
-            }
-
             return CreateFile(
                 "CONOUT$",
                 GenericWrite,
@@ -174,6 +179,18 @@ namespace FastLog.Sinks
 
             CloseHandle(_outputHandle);
             _outputHandle = IntPtr.Zero;
+        }
+
+        private static bool HasConsoleOutputHandle()
+        {
+            IntPtr standardOutput = GetStdHandle(StandardOutputHandle);
+
+            if (!IsValidHandle(standardOutput))
+            {
+                return false;
+            }
+
+            return GetConsoleMode(standardOutput, out uint _);
         }
 
         private static bool IsValidHandle(IntPtr handle)
@@ -233,6 +250,14 @@ namespace FastLog.Sinks
 
         private delegate bool ConsoleCtrlDelegate(int controlType);
 
+        private enum WindowsConsoleOwnership
+        {
+            None,
+            ExistingProcessConsole,
+            AttachedParentConsole,
+            CreatedByFastLog
+        }
+
         internal enum ConsoleTextColor
         {
             DarkGray,
@@ -280,6 +305,12 @@ namespace FastLog.Sinks
 
         [DllImport("kernel32.dll", SetLastError = true)]
         private static extern bool SetConsoleCtrlHandler(ConsoleCtrlDelegate handlerRoutine, bool add);
+
+        [DllImport("kernel32.dll", SetLastError = true)]
+        private static extern IntPtr GetStdHandle(int standardHandle);
+
+        [DllImport("kernel32.dll", SetLastError = true)]
+        private static extern bool GetConsoleMode(IntPtr consoleHandle, out uint mode);
 
         [DllImport("kernel32.dll")]
         private static extern IntPtr GetConsoleWindow();
