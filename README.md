@@ -101,7 +101,7 @@ using FastLog.Models;
 Log.Initialize(config =>
 {
     config
-        .ProjectName("贴标机")
+        .ProjectName("damo")
         .BasePath(@"D:\Logs")
         .MinimumLevel(LogLevel.Info)
         .RetentionDays(30)
@@ -141,7 +141,7 @@ UDP 输出组合：
 Log.Initialize(config =>
 {
     config
-        .ProjectName("贴标机")
+        .ProjectName("damo")
         .BasePath(@"D:\Logs")
         .MinimumLevel(LogLevel.Info)
         .WriteToFile()
@@ -404,7 +404,7 @@ LogSinkType.Udp
 ```csharp
 Log.Initialize(new LoggerOptions
 {
-    ProjectName = "贴标机",
+    ProjectName = "damo",
     BasePath = @"D:\Logs",
     MinimumLevel = LogLevel.Info,
     SinkType = LogSinkType.Udp,
@@ -546,7 +546,7 @@ yyyy-MM-dd HH:mm:ss.fff [LEVEL] [FileName.cs] [TID:x] MethodName() LineNumber : 
 2026-06-16 20:45:04.021 [DEBUG] [DAEMON] [RuntimeCheck.cs] [TID:1] Main() 9 : 程序启动
 ```
 
-如果一个系统由多个进程组成，可以使用 `FileNamePrefix` 让不同进程写入不同文件，避免 `MJInspector.exe`、`Server.exe`、`Daemon.exe` 同时写同一个日期日志文件。
+如果一个系统由多个进程组成，可以使用 `FileNamePrefix` 让不同进程写入不同文件，避免不同进程同时写同一个日期日志文件。
 
 ```csharp
 Log.Initialize(new LoggerOptions
@@ -554,7 +554,7 @@ Log.Initialize(new LoggerOptions
     ProjectName = "MJInspector",
     BasePath = AppDomain.CurrentDomain.BaseDirectory,
     SinkDirectory = @"D:\Logs\Inspection",
-    FileNamePrefix = "MJInspector",
+    FileNamePrefix = "damo",
     MinimumLevel = LogLevel.Debug,
     SinkType = LogSinkType.File,
     QueueFullMode = QueueFullMode.Block,
@@ -574,9 +574,9 @@ Log.Initialize(new LoggerOptions
 输出文件示例：
 
 ```text
-D:\Logs\Inspection\MJInspector_2026-06-16.log
-D:\Logs\Inspection\Server_2026-06-16.log
-D:\Logs\Inspection\Daemon_2026-06-16.log
+D:\Logs\Inspection\damo1_2026-06-16.log
+D:\Logs\Inspection\damo2_2026-06-16.log
+D:\Logs\Inspection\damo3_2026-06-16.log
 ```
 
 也可以通过 `LoggerConfiguration` 链式配置：
